@@ -99,6 +99,8 @@
     .btn-primary:hover { background-color: #1d4ed8; }
     .btn-secondary { background-color: #f1f5f9; color: var(--text-main); border: 1px solid #cbd5e1; }
     .btn-secondary:hover { background-color: #e2e8f0; }
+    .btn-calc { background-color: #059669; color: #ffffff; }
+    .btn-calc:hover { background-color: #047857; }
     .btn-print { background-color: #0284c7; color: #ffffff; }
     .btn-print:hover { background-color: #0369a1; }
     .btn-danger { background-color: #ef4444; color: #ffffff; }
@@ -133,7 +135,7 @@
 
     .action-toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* Table Styles (Desktop Default) */
+    /* Desktop Table Styles */
     .table-wrapper { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 12px 14px; border-bottom: 2px solid var(--border-color); }
@@ -158,6 +160,15 @@
     .gwa-label { font-size: 15px; font-weight: 600; color: var(--primary-dark); }
     .gwa-value { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
 
+    .calc-box {
+      margin-top: 15px;
+      text-align: center;
+      padding: 12px;
+      background: #f0fdf4;
+      border: 1px dashed #059669;
+      border-radius: 8px;
+    }
+
     /* =========================================================
        📱 MOBILE RESPONSIVE AUTOFIT LAYOUT (Screens <= 640px)
        ========================================================= */
@@ -165,10 +176,7 @@
       body { padding: 10px 5px; }
       .content-body { padding: 15px 12px; }
 
-      .school-header {
-        padding: 16px;
-        gap: 12px;
-      }
+      .school-header { padding: 16px; gap: 12px; }
       .school-logo { width: 44px; height: 44px; font-size: 18px; }
       .school-info h1 { font-size: 16px; }
       .school-info p { font-size: 11px; }
@@ -187,16 +195,11 @@
         gap: 6px;
       }
 
-      .action-toolbar .btn {
-        padding: 8px 4px;
-        font-size: 11px;
-        white-space: nowrap;
-      }
+      .action-toolbar .btn { padding: 8px 4px; font-size: 11px; white-space: nowrap; }
 
-      /* Convert Table into Mobile Stacked Cards */
       .table-wrapper { border: none; }
       table, thead, tbody, th, td, tr { display: block; width: 100%; }
-      thead { display: none; } /* Hide traditional header row on mobile */
+      thead { display: none; }
 
       tr {
         background: #ffffff;
@@ -218,8 +221,6 @@
       }
 
       td:last-child { border-bottom: none; }
-
-      /* Insert column labels dynamically on the left side of cards */
       td::before {
         content: attr(data-label);
         font-weight: 700;
@@ -228,15 +229,8 @@
         padding-right: 12px;
       }
 
-      /* Distinct Mobile Row Highlights */
-      td[data-label="Subject Name"] {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--primary-dark);
-      }
-
-      td[data-label="Final Rating"], 
-      td[data-label="Final Grade"] {
+      td[data-label="Subject Name"] { font-size: 14px; font-weight: 700; color: var(--primary-dark); }
+      td[data-label="Final Rating"], td[data-label="Final Grade"] {
         background-color: #eff6ff;
         padding: 8px 10px;
         border-radius: 6px;
@@ -245,30 +239,77 @@
         color: var(--primary-dark);
       }
 
-      .gwa-banner {
-        flex-direction: column;
-        gap: 6px;
-        text-align: center;
-        padding: 14px;
-      }
+      .gwa-banner { flex-direction: column; gap: 6px; text-align: center; padding: 14px; }
       .gwa-value { font-size: 20px; }
     }
 
-    /* Print Optimization */
+    /* =========================================================
+       🖨️ STRICT PRINT & PDF LAYOUT ALIGNMENT
+       ========================================================= */
     @media print {
-      body { background: #ffffff; padding: 0; }
-      .container { box-shadow: none; border: none; max-width: 100%; width: 100%; }
-      .no-print, .action-toolbar, #login-section { display: none !important; }
-      .school-header { background: #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .profile-bar { background: #eff6ff !important; border: 1px solid #bfdbfe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .gwa-banner { background: #eff6ff !important; border-left: 5px solid #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      th { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: #ffffff !important; padding: 0 !important; }
+      .container { box-shadow: none !important; border: none !important; max-width: 100% !important; width: 100% !important; border-radius: 0 !important; }
+      .no-print, .action-toolbar, #login-section, .calc-box { display: none !important; }
       
-      /* Force table view for print output */
-      table, thead, tbody, th, td, tr { display: table-cell !important; }
-      tr { display: table-row !important; border: none !important; box-shadow: none !important; }
+      .school-header {
+        background: #1e3a8a !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 15px !important;
+      }
+      .school-logo { background: #ffffff !important; color: #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      
+      .profile-bar {
+        background: #eff6ff !important;
+        border: 1px solid #bfdbfe !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 14px 18px !important;
+        margin-bottom: 15px !important;
+      }
+
+      /* Force standard table display for printing */
+      .table-wrapper { border: 1px solid #cbd5e1 !important; margin-top: 10px !important; width: 100% !important; }
+      table { display: table !important; width: 100% !important; table-layout: fixed !important; border-collapse: collapse !important; }
       thead { display: table-header-group !important; }
+      tbody { display: table-row-group !important; }
+      tr { display: table-row !important; background: transparent !important; border: none !important; box-shadow: none !important; page-break-inside: avoid; }
+      th, td {
+        display: table-cell !important;
+        padding: 8px 10px !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+        border-right: 1px solid #e2e8f0 !important;
+        font-size: 12px !important;
+        vertical-align: middle !important;
+      }
+      th:last-child, td:last-child { border-right: none !important; }
+      th {
+        background-color: #f1f5f9 !important;
+        color: #1f2937 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-weight: 700 !important;
+      }
+      
       td::before { display: none !important; }
+
+      /* Column Print Width Alignments */
+      .col-term { width: 12%; text-align: left !important; }
+      .col-type { width: 12%; text-align: center !important; }
+      .col-subject { width: 38%; text-align: left !important; }
+      .col-units { width: 10%; text-align: center !important; }
+      .col-term-grade { width: 9%; text-align: center !important; }
+      .col-final { width: 10%; text-align: right !important; }
+
+      .gwa-banner {
+        background: #eff6ff !important;
+        border-left: 5px solid #1e3a8a !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 12px 16px !important;
+        margin-top: 15px !important;
+      }
     }
   </style>
 </head>
@@ -334,6 +375,7 @@
   const API_URL = "https://script.google.com/macros/s/AKfycbzeu0ttCfjZO2bgJ1-bz5ChVCMgsB2Jhjt6NGxKBCBNzta0dsda7VoX-sAws9GFNOqBsA/exec";
 
   let currentCredentials = { username: "", password: "" };
+  let currentStudentData = null;
 
   async function login() {
     const user = document.getElementById("username").value.trim();
@@ -383,6 +425,7 @@
       if (data.status === "error") {
         errorMsg.innerText = data.message;
       } else {
+        currentStudentData = data;
         renderDashboard(data);
       }
     } catch (err) {
@@ -408,13 +451,13 @@
       html += `
         <thead>
           <tr>
-            <th>Type</th>
-            <th>Subject Name</th>
-            <th>Units</th>
-            <th>Term 1</th>
-            <th>Term 2</th>
-            <th>Term 3</th>
-            <th>Final Rating</th>
+            <th class="col-type">Type</th>
+            <th class="col-subject">Subject Name</th>
+            <th class="col-units">Units</th>
+            <th class="col-term-grade">Term 1</th>
+            <th class="col-term-grade">Term 2</th>
+            <th class="col-term-grade">Term 3</th>
+            <th class="col-final">Final Rating</th>
           </tr>
         </thead>
         <tbody>`;
@@ -423,27 +466,36 @@
         const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
         html += `
           <tr>
-            <td data-label="Type"><span class="badge ${badgeClass}">${item.subjectType}</span></td>
-            <td data-label="Subject Name"><strong>${item.subjectName}</strong></td>
-            <td data-label="Units">${item.units}</td>
-            <td data-label="Term 1">${item.term1 ?? '-'}</td>
-            <td data-label="Term 2">${item.term2 ?? '-'}</td>
-            <td data-label="Term 3">${item.term3 ?? '-'}</td>
-            <td data-label="Final Rating"><strong>${item.finalRating ?? '-'}</strong></td>
+            <td class="col-type" data-label="Type"><span class="badge ${badgeClass}">${item.subjectType}</span></td>
+            <td class="col-subject" data-label="Subject Name"><strong>${item.subjectName}</strong></td>
+            <td class="col-units" data-label="Units">${item.units}</td>
+            <td class="col-term-grade" data-label="Term 1">${item.term1 ?? '-'}</td>
+            <td class="col-term-grade" data-label="Term 2">${item.term2 ?? '-'}</td>
+            <td class="col-term-grade" data-label="Term 3">${item.term3 ?? '-'}</td>
+            <td class="col-final" data-label="Final Rating"><strong>${item.finalRating ?? '-'}</strong></td>
           </tr>`;
       });
 
       html += `</tbody></table></div>`;
 
+      if (data.generalAverage !== null) {
+        html += `
+          <div class="gwa-banner">
+            <span class="gwa-label">General Weighted Average (GWA)</span>
+            <span class="gwa-value">${data.generalAverage}%</span>
+          </div>`;
+      }
+
     } else {
+      // Grade 12 Table
       html += `
         <thead>
           <tr>
-            <th>Term</th>
-            <th>Type</th>
-            <th>Subject Name</th>
-            <th>Units</th>
-            <th>Final Grade</th>
+            <th class="col-term">Term</th>
+            <th class="col-type">Type</th>
+            <th class="col-subject">Subject Name</th>
+            <th class="col-units">Units</th>
+            <th class="col-final">Final Grade</th>
           </tr>
         </thead>
         <tbody>`;
@@ -451,30 +503,68 @@
       data.grades.forEach(item => {
         html += `
           <tr>
-            <td data-label="Term"><strong>${item.term}</strong></td>
-            <td data-label="Type"><span class="badge badge-elective">${item.subjectType}</span></td>
-            <td data-label="Subject Name">${item.subjectName}</td>
-            <td data-label="Units">${item.units}</td>
-            <td data-label="Final Grade"><strong>${item.finalRating ?? '-'}</strong></td>
+            <td class="col-term" data-label="Term"><strong>${item.term}</strong></td>
+            <td class="col-type" data-label="Type"><span class="badge badge-elective">${item.subjectType}</span></td>
+            <td class="col-subject" data-label="Subject Name">${item.subjectName}</td>
+            <td class="col-units" data-label="Units">${item.units}</td>
+            <td class="col-final" data-label="Final Grade"><strong>${item.finalRating ?? '-'}</strong></td>
           </tr>`;
       });
 
       html += `</tbody></table></div>`;
-    }
 
-    if (data.generalAverage !== null) {
+      // Grade 12 Manual Calculation Block
       html += `
-        <div class="gwa-banner">
-          <span class="gwa-label">General Weighted Average (GWA)</span>
-          <span class="gwa-value">${data.generalAverage}%</span>
-        </div>`;
+        <div id="g12-calc-container" class="calc-box no-print">
+          <button class="btn btn-calc" onclick="calculateGrade12GWA()">
+            🧮 Calculate Final General Average
+          </button>
+        </div>
+        <div id="g12-gwa-banner" class="gwa-banner hidden"></div>`;
     }
 
     container.innerHTML = html;
   }
 
+  // Calculate Grade 12 GWA dynamically on button click
+  function calculateGrade12GWA() {
+    if (!currentStudentData || !currentStudentData.grades) return;
+
+    let totalScore = 0;
+    let totalUnits = 0;
+
+    currentStudentData.grades.forEach(item => {
+      if (item.finalRating !== null && !isNaN(item.finalRating)) {
+        totalScore += item.finalRating * item.units;
+        totalUnits += item.units;
+      }
+    });
+
+    const banner = document.getElementById("g12-gwa-banner");
+    const calcContainer = document.getElementById("g12-calc-container");
+
+    if (totalUnits > 0) {
+      const gwa = Math.round(totalScore / totalUnits);
+      banner.innerHTML = `
+        <span class="gwa-label">Final General Weighted Average (GWA)</span>
+        <span class="gwa-value">${gwa}%</span>`;
+      banner.classList.remove("hidden");
+      
+      // Update calculate button text to allow re-calculation if needed
+      if (calcContainer) {
+        calcContainer.innerHTML = `
+          <button class="btn btn-calc" onclick="calculateGrade12GWA()">
+            🔄 Recalculate Final General Average
+          </button>`;
+      }
+    } else {
+      alert("No valid final grades recorded yet to calculate GWA.");
+    }
+  }
+
   function logout() {
     currentCredentials = { username: "", password: "" };
+    currentStudentData = null;
     document.getElementById("dashboard-section").classList.add("hidden");
     document.getElementById("login-section").classList.remove("hidden");
     document.getElementById("username").value = "";

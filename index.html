@@ -250,25 +250,31 @@
 
   async function syncData() {
     const syncBtn = document.getElementById("sync-btn");
-    syncBtn.innerHTML = "🔄 Syncing...";
+    syncBtn.innerText = "🔄 Syncing...";
     syncBtn.disabled = true;
 
     await fetchAndRenderGrades();
 
     setTimeout(() => {
-      syncBtn.innerHTML = "🔄 Sync Data";
+      syncBtn.innerText = "🔄 Sync Data";
       syncBtn.disabled = false;
-    }, 500);
+    }, 400);
   }
 
   async function fetchAndRenderGrades() {
     const errorMsg = document.getElementById("error-msg");
 
     try {
-      const response = await fetch(API_URL, {
+      // Append cache-buster timestamp query string to bypass browser proxy caching
+      const cacheBustUrl = `${API_URL}?_t=${Date.now()}`;
+
+      const response = await fetch(cacheBustUrl, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(currentCredentials)
+        body: JSON.stringify({
+          ...currentCredentials,
+          _timestamp: Date.now()
+        })
       });
 
       const data = await response.json();

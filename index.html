@@ -1,129 +1,77 @@
-function doPost(e) {
-  try {
-    const requestData = JSON.parse(e.postData.contents);
-    const username = requestData.username ? requestData.username.trim() : "";
-    const password = requestData.password ? requestData.password.trim() : "";
+function renderDashboard(data) {
+  document.getElementById("login-section").classList.add("hidden");
+  document.getElementById("dashboard-section").classList.remove("hidden");
 
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+  document.getElementById("student-name").innerText = `Student: ${data.student.fullName}`;
+  document.getElementById("student-grade").innerText = `Grade ${data.student.gradeLevel}`;
+
+  const container = document.getElementById("grades-container");
+  container.innerHTML = "";
+
+  let html = `<table>`;
+
+  if (data.student.gradeLevel === 11) {
+    html += `
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Subject</th>
+          <th>Units</th>
+          <th>Term 1</th>
+          <th>Term 2</th>
+          <th>Term 3</th>
+          <th>Final Rating</th>
+        </tr>
+      </thead>
+      <tbody>`;
     
-    // 1. Authenticate Student
-    const studentsSheet = ss.getSheetByName("Students");
-    const studentsData = studentsSheet.getDataRange().getValues();
-    
-    let student = null;
-    for (let i = 1; i < studentsData.length; i++) {
-      if (String(studentsData[i][1]) === username && String(studentsData[i][2]) === password) {
-        student = {
-          studentId: String(studentsData[i][0]),
-          username: studentsData[i][1],
-          fullName: studentsData[i][3],
-          gradeLevel: parseInt(studentsData[i][4], 10)
-        };
-        break;
-      }
-    }
-
-    if (!student) {
-      return responseJSON({ status: "error", message: "Invalid Username or Password" });
-    }
-
-    // 2. Fetch Grades & Calculate General Average
-    let gradeReport = [];
-    let generalAverage = null;
-
-    if (student.gradeLevel === 11) {
-      const g11Sheet = ss.getSheetByName("Grade11");
-      const g11Data = g11Sheet.getDataRange().getValues();
-
-      let totalWeightedScore = 0;
-      let totalUnits = 0;
-
-      for (let i = 1; i < g11Data.length; i++) {
-        if (String(g11Data[i][0]) === student.studentId) {
-          const type = g11Data[i][1];
-          const subject = g11Data[i][2];
-          const t1 = parseFloat(g11Data[i][3]) || null;
-          const t2 = parseFloat(g11Data[i][4]) || null;
-          const t3 = parseFloat(g11Data[i][5]) || null;
-
-          let finalGrade = null;
-          let units = (type === "Core") ? 6 : 3;
-
-          if (type === "Core") {
-            const validTerms = [t1, t2, t3].filter(v => v !== null);
-            if (validTerms.length > 0) {
-              const sum = validTerms.reduce((acc, curr) => acc + curr, 0);
-              finalGrade = Math.round(sum / validTerms.length);
-            }
-          } else if (type === "Elective") {
-            const termVal = [t1, t2, t3].find(v => v !== null);
-            if (termVal !== null && termVal !== undefined) {
-              finalGrade = Math.round(termVal);
-            }
-          }
-
-          // Accumulate weighted points if a final grade exists
-          if (finalGrade !== null) {
-            totalWeightedScore += finalGrade * units;
-            totalUnits += units;
-          }
-
-          gradeReport.push({
-            subjectType: type,
-            subjectName: subject,
-            units: units,
-            term1: t1,
-            term2: t2,
-            term3: t3,
-            finalRating: finalGrade
-          });
-        }
-      }
-
-      // Calculate General Weighted Average rounded to nearest whole number
-      if (totalUnits > 0) {
-        generalAverage = Math.round(totalWeightedScore / totalUnits);
-      }
-
-    } else if (student.gradeLevel === 12) {
-      const g12Sheet = ss.getSheetByName("Grade12");
-      const g12Data = g12Sheet.getDataRange().getValues();
-
-      for (let i = 1; i < g12Data.length; i++) {
-        if (String(g12Data[i][0]) === student.studentId) {
-          const term = g12Data[i][1];
-          const subject = g12Data[i][2];
-          const gradeVal = parseFloat(g12Data[i][3]);
-
-          gradeReport.push({
-            term: term,
-            subjectName: subject,
-            finalRating: isNaN(gradeVal) ? null : Math.round(gradeVal)
-          });
-        }
-      }
-    }
-
-    return responseJSON({
-      status: "success",
-      student: student,
-      grades: gradeReport,
-      generalAverage: generalAverage
+    data.grades.forEach(item => {
+      const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
+      html += `
+        <tr>
+          <td><span class="badge ${badgeClass}">${item.subjectType}</span></td>
+          <td>${item.subjectName}</td>
+          <td>${item.units}</td>
+          <td>${item.term1 ?? '-'}</td>
+          <td>${item.term2 ?? '-'}</td>
+          <td>${item.term3 ?? '-'}</td>
+          <td><strong>${item.finalRating ?? '-'}</strong></td>
+        </tr>`;
     });
 
-  } catch (err) {
-    return responseJSON({ status: "error", message: err.toString() });
+    html += `</tbody></table>`;
+
+    if (data.generalAverage !== null) {
+      html += `
+        <div style="margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 6px; text-align: right;">
+          <span style="font-size: 18px; font-weight: bold; color: #1a73e8;">
+            General Weighted Average (GWA): ${data.generalAverage}%
+          </span>
+        </div>`;
+    }
+
+  } else {
+    html += `
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Subject</th>
+          <th>Final Grade</th>
+        </tr>
+      </thead>
+      <tbody>`;
+    
+    data.grades.forEach(item => {
+      html += `
+        <tr>
+          <td>${item.term}</td>
+          <td>${item.subjectName}</td>
+          <td><strong>${item.finalRating ?? '-'}</strong></td>
+        </tr>`;
+    });
+
+    html += `</tbody></table>`;
   }
-}
 
-function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({ 
-    status: "online", 
-    message: "SHS Grade Portal API is active." 
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function responseJSON(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
+  container.innerHTML = html;
 }

@@ -18,7 +18,7 @@
     }
 
     * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-    body { background-color: #f8fafc; color: var(--text-main); padding: 30px 15px; }
+    body { background-color: #f8fafc; color: var(--text-main); padding: 20px 10px; }
 
     .container {
       max-width: 900px;
@@ -34,37 +34,37 @@
     .school-header {
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
       color: #ffffff;
-      padding: 24px 30px;
+      padding: 20px 24px;
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       border-bottom: 4px solid #1d4ed8;
     }
 
     .school-logo {
-      width: 60px;
-      height: 60px;
+      width: 54px;
+      height: 54px;
       background: #ffffff;
       color: var(--primary-dark);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       box-shadow: 0 4px 6px rgba(0,0,0,0.15);
       flex-shrink: 0;
     }
 
-    .school-info h1 { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
-    .school-info p { font-size: 13px; color: #dbeafe; font-weight: 500; }
+    .school-info h1 { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+    .school-info p { font-size: 12px; color: #dbeafe; font-weight: 500; }
 
-    .content-body { padding: 30px; }
+    .content-body { padding: 20px; }
 
     /* Login Form */
-    .login-card { max-width: 400px; margin: 20px auto; }
-    .login-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); text-align: center; margin-bottom: 20px; }
-    .form-group { margin-bottom: 18px; }
+    .login-card { max-width: 400px; margin: 10px auto; }
+    .login-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); text-align: center; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
     label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
     input[type="text"], input[type="password"] {
       width: 100%;
@@ -85,16 +85,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px 18px;
+      gap: 6px;
+      padding: 10px 16px;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .btn-block { width: 100%; padding: 12px; }
+    .btn-block { width: 100%; padding: 12px; font-size: 15px; }
     .btn-primary { background-color: var(--primary); color: #ffffff; }
     .btn-primary:hover { background-color: #1d4ed8; }
     .btn-secondary { background-color: #f1f5f9; color: var(--text-main); border: 1px solid #cbd5e1; }
@@ -115,11 +115,11 @@
       background-color: var(--primary-light);
       border: 1px solid #bfdbfe;
       border-radius: 10px;
-      padding: 20px 24px;
-      margin-bottom: 25px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
     }
-    .student-name { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
-    .student-id { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .student-name { font-size: 18px; font-weight: 700; color: var(--primary-dark); }
+    .student-id { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
     .student-grade-tag {
       display: inline-block;
       margin-top: 6px;
@@ -133,15 +133,15 @@
 
     .action-toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* Table Styles */
-    .table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
+    /* Table Styles (Desktop Default) */
+    .table-wrapper { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 12px 14px; border-bottom: 2px solid var(--border-color); }
     td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
     tr:last-child td { border-bottom: none; }
     tr:nth-child(even) { background-color: #fbfcfd; }
 
-    .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #fff; background-color: #3b82f6; }
+    .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #fff; background-color: #3b82f6; display: inline-block; }
     .badge-elective { background-color: var(--accent-teal); }
 
     /* GWA Banner */
@@ -158,6 +158,102 @@
     .gwa-label { font-size: 15px; font-weight: 600; color: var(--primary-dark); }
     .gwa-value { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
 
+    /* =========================================================
+       📱 MOBILE RESPONSIVE AUTOFIT LAYOUT (Screens <= 640px)
+       ========================================================= */
+    @media screen and (max-width: 640px) {
+      body { padding: 10px 5px; }
+      .content-body { padding: 15px 12px; }
+
+      .school-header {
+        padding: 16px;
+        gap: 12px;
+      }
+      .school-logo { width: 44px; height: 44px; font-size: 18px; }
+      .school-info h1 { font-size: 16px; }
+      .school-info p { font-size: 11px; }
+
+      .profile-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 14px;
+      }
+
+      .action-toolbar {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+      }
+
+      .action-toolbar .btn {
+        padding: 8px 4px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      /* Convert Table into Mobile Stacked Cards */
+      .table-wrapper { border: none; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead { display: none; } /* Hide traditional header row on mobile */
+
+      tr {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
+        text-align: right;
+      }
+
+      td:last-child { border-bottom: none; }
+
+      /* Insert column labels dynamically on the left side of cards */
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #64748b;
+        text-align: left;
+        padding-right: 12px;
+      }
+
+      /* Distinct Mobile Row Highlights */
+      td[data-label="Subject Name"] {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--primary-dark);
+      }
+
+      td[data-label="Final Rating"], 
+      td[data-label="Final Grade"] {
+        background-color: #eff6ff;
+        padding: 8px 10px;
+        border-radius: 6px;
+        margin-top: 4px;
+        font-size: 14px;
+        color: var(--primary-dark);
+      }
+
+      .gwa-banner {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+        padding: 14px;
+      }
+      .gwa-value { font-size: 20px; }
+    }
+
     /* Print Optimization */
     @media print {
       body { background: #ffffff; padding: 0; }
@@ -167,6 +263,12 @@
       .profile-bar { background: #eff6ff !important; border: 1px solid #bfdbfe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .gwa-banner { background: #eff6ff !important; border-left: 5px solid #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       th { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      
+      /* Force table view for print output */
+      table, thead, tbody, th, td, tr { display: table-cell !important; }
+      tr { display: table-row !important; border: none !important; box-shadow: none !important; }
+      thead { display: table-header-group !important; }
+      td::before { display: none !important; }
     }
   </style>
 </head>
@@ -213,7 +315,7 @@
             🔄 Sync Data
           </button>
           <button class="btn btn-print" onclick="window.print()">
-            🖨️ Print Report
+            🖨️ Print
           </button>
           <button class="btn btn-danger" onclick="logout()">
             Logout
@@ -221,7 +323,7 @@
         </div>
       </div>
 
-      <h3 style="font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px;">Academic Performance</h3>
+      <h3 style="font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px;">Academic Performance</h3>
       <div id="grades-container"></div>
     </div>
   </div>
@@ -265,7 +367,6 @@
     const errorMsg = document.getElementById("error-msg");
 
     try {
-      // Append cache-buster timestamp query string to bypass browser proxy caching
       const cacheBustUrl = `${API_URL}?_t=${Date.now()}`;
 
       const response = await fetch(cacheBustUrl, {
@@ -322,13 +423,13 @@
         const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
         html += `
           <tr>
-            <td><span class="badge ${badgeClass}">${item.subjectType}</span></td>
-            <td><strong>${item.subjectName}</strong></td>
-            <td>${item.units}</td>
-            <td>${item.term1 ?? '-'}</td>
-            <td>${item.term2 ?? '-'}</td>
-            <td>${item.term3 ?? '-'}</td>
-            <td><strong>${item.finalRating ?? '-'}</strong></td>
+            <td data-label="Type"><span class="badge ${badgeClass}">${item.subjectType}</span></td>
+            <td data-label="Subject Name"><strong>${item.subjectName}</strong></td>
+            <td data-label="Units">${item.units}</td>
+            <td data-label="Term 1">${item.term1 ?? '-'}</td>
+            <td data-label="Term 2">${item.term2 ?? '-'}</td>
+            <td data-label="Term 3">${item.term3 ?? '-'}</td>
+            <td data-label="Final Rating"><strong>${item.finalRating ?? '-'}</strong></td>
           </tr>`;
       });
 
@@ -350,11 +451,11 @@
       data.grades.forEach(item => {
         html += `
           <tr>
-            <td><strong>${item.term}</strong></td>
-            <td><span class="badge badge-elective">${item.subjectType}</span></td>
-            <td>${item.subjectName}</td>
-            <td>${item.units}</td>
-            <td><strong>${item.finalRating ?? '-'}</strong></td>
+            <td data-label="Term"><strong>${item.term}</strong></td>
+            <td data-label="Type"><span class="badge badge-elective">${item.subjectType}</span></td>
+            <td data-label="Subject Name">${item.subjectName}</td>
+            <td data-label="Units">${item.units}</td>
+            <td data-label="Final Grade"><strong>${item.finalRating ?? '-'}</strong></td>
           </tr>`;
       });
 

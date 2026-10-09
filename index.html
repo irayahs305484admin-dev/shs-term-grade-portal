@@ -1,77 +1,180 @@
-function renderDashboard(data) {
-  document.getElementById("login-section").classList.add("hidden");
-  document.getElementById("dashboard-section").classList.remove("hidden");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHS Student Grade Portal</title>
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; padding: 20px; background-color: #f4f6f9; color: #333; }
+    .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #1a73e8; margin-top: 0; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    button { width: 100%; background-color: #1a73e8; color: white; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    button:hover { background-color: #1557b0; }
+    .error { color: red; text-align: center; margin-top: 10px; }
+    .hidden { display: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #fff; background-color: #5c6bc0; font-weight: bold; }
+    .badge-elective { background-color: #26a69a; }
+    .gwa-box { margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 6px; text-align: right; border-left: 5px solid #1a73e8; }
+    .gwa-text { font-size: 18px; font-weight: bold; color: #1a73e8; }
+  </style>
+</head>
+<body>
 
-  document.getElementById("student-name").innerText = `Student: ${data.student.fullName}`;
-  document.getElementById("student-grade").innerText = `Grade ${data.student.gradeLevel}`;
+<div class="container">
+  <!-- Login Section -->
+  <div id="login-section">
+    <h2>Student Term Grade Access</h2>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter assigned username">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password">
+    </div>
+    <button onclick="login()">Login</button>
+    <div id="error-msg" class="error"></div>
+  </div>
 
-  const container = document.getElementById("grades-container");
-  container.innerHTML = "";
+  <!-- Dashboard Section -->
+  <div id="dashboard-section" class="hidden">
+    <button style="width: auto; float: right; background-color: #d9534f;" onclick="logout()">Logout</button>
+    <h2 id="student-name">Welcome</h2>
+    <p><strong>Grade Level:</strong> <span id="student-grade"></span></p>
 
-  let html = `<table>`;
+    <h3>Academic Grade Report</h3>
+    <div id="grades-container"></div>
+  </div>
+</div>
 
-  if (data.student.gradeLevel === 11) {
-    html += `
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Subject</th>
-          <th>Units</th>
-          <th>Term 1</th>
-          <th>Term 2</th>
-          <th>Term 3</th>
-          <th>Final Rating</th>
-        </tr>
-      </thead>
-      <tbody>`;
-    
-    data.grades.forEach(item => {
-      const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
-      html += `
-        <tr>
-          <td><span class="badge ${badgeClass}">${item.subjectType}</span></td>
-          <td>${item.subjectName}</td>
-          <td>${item.units}</td>
-          <td>${item.term1 ?? '-'}</td>
-          <td>${item.term2 ?? '-'}</td>
-          <td>${item.term3 ?? '-'}</td>
-          <td><strong>${item.finalRating ?? '-'}</strong></td>
-        </tr>`;
-    });
+<script>
+  // Replace with your Web App URL from Google Apps Script
+  const API_URL = "https://script.google.com/macros/s/AKfycbzeu0ttCfjZO2bgJ1-bz5ChVCMgsB2Jhjt6NGxKBCBNzta0dsda7VoX-sAws9GFNOqBsA/exec";
 
-    html += `</tbody></table>`;
+  async function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    const errorMsg = document.getElementById("error-msg");
 
-    if (data.generalAverage !== null) {
-      html += `
-        <div style="margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 6px; text-align: right;">
-          <span style="font-size: 18px; font-weight: bold; color: #1a73e8;">
-            General Weighted Average (GWA): ${data.generalAverage}%
-          </span>
-        </div>`;
+    errorMsg.innerText = "";
+    if (!user || !pass) {
+      errorMsg.innerText = "Please fill in all fields.";
+      return;
     }
 
-  } else {
-    html += `
-      <thead>
-        <tr>
-          <th>Term</th>
-          <th>Subject</th>
-          <th>Final Grade</th>
-        </tr>
-      </thead>
-      <tbody>`;
-    
-    data.grades.forEach(item => {
-      html += `
-        <tr>
-          <td>${item.term}</td>
-          <td>${item.subjectName}</td>
-          <td><strong>${item.finalRating ?? '-'}</strong></td>
-        </tr>`;
-    });
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ username: user, password: pass })
+      });
 
-    html += `</tbody></table>`;
+      const data = await response.json();
+
+      if (data.status === "error") {
+        errorMsg.innerText = data.message;
+      } else {
+        renderDashboard(data);
+      }
+    } catch (err) {
+      errorMsg.innerText = "Error connecting to backend server.";
+      console.error(err);
+    }
   }
 
-  container.innerHTML = html;
-}
+  function renderDashboard(data) {
+    document.getElementById("login-section").classList.add("hidden");
+    document.getElementById("dashboard-section").classList.remove("hidden");
+
+    document.getElementById("student-name").innerText = `Student: ${data.student.fullName}`;
+    document.getElementById("student-grade").innerText = `Grade ${data.student.gradeLevel}`;
+
+    const container = document.getElementById("grades-container");
+    container.innerHTML = "";
+
+    let html = "";
+
+    if (data.student.gradeLevel === 11) {
+      html += `
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Subject</th>
+              <th>Units</th>
+              <th>Term 1</th>
+              <th>Term 2</th>
+              <th>Term 3</th>
+              <th>Final Rating</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+      data.grades.forEach(item => {
+        const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
+        html += `
+          <tr>
+            <td><span class="badge ${badgeClass}">${item.subjectType}</span></td>
+            <td>${item.subjectName}</td>
+            <td>${item.units}</td>
+            <td>${item.term1 ?? '-'}</td>
+            <td>${item.term2 ?? '-'}</td>
+            <td>${item.term3 ?? '-'}</td>
+            <td><strong>${item.finalRating ?? '-'}</strong></td>
+          </tr>`;
+      });
+
+      html += `</tbody></table>`;
+
+      if (data.generalAverage !== null) {
+        html += `
+          <div class="gwa-box">
+            <span class="gwa-text">
+              General Weighted Average (GWA): ${data.generalAverage}%
+            </span>
+          </div>`;
+      }
+
+    } else {
+      html += `
+        <table>
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th>Subject</th>
+              <th>Final Grade</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+      data.grades.forEach(item => {
+        html += `
+          <tr>
+            <td>${item.term}</td>
+            <td>${item.subjectName}</td>
+            <td><strong>${item.finalRating ?? '-'}</strong></td>
+          </tr>`;
+      });
+
+      html += `</tbody></table>`;
+    }
+
+    container.innerHTML = html;
+  }
+
+  function logout() {
+    document.getElementById("dashboard-section").classList.add("hidden");
+    document.getElementById("login-section").classList.remove("hidden");
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+  }
+</script>
+</body>
+</html>

@@ -21,7 +21,7 @@
     body { background-color: #f8fafc; color: var(--text-main); padding: 20px 10px; }
 
     .container {
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
       background: #ffffff;
       border-radius: 12px;
@@ -143,8 +143,11 @@
     tr:last-child td { border-bottom: none; }
     tr:nth-child(even) { background-color: #fbfcfd; }
 
+    /* Badges */
     .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #fff; background-color: #3b82f6; display: inline-block; }
     .badge-elective { background-color: var(--accent-teal); }
+    .badge-passed { background-color: #16a34a; }
+    .badge-failed { background-color: #dc2626; }
 
     /* GWA Banner */
     .gwa-banner {
@@ -269,7 +272,6 @@
         margin-bottom: 15px !important;
       }
 
-      /* Force standard table display for printing */
       .table-wrapper { border: 1px solid #cbd5e1 !important; margin-top: 10px !important; width: 100% !important; }
       table { display: table !important; width: 100% !important; table-layout: fixed !important; border-collapse: collapse !important; }
       thead { display: table-header-group !important; }
@@ -280,7 +282,7 @@
         padding: 8px 10px !important;
         border-bottom: 1px solid #cbd5e1 !important;
         border-right: 1px solid #e2e8f0 !important;
-        font-size: 12px !important;
+        font-size: 11px !important;
         vertical-align: middle !important;
       }
       th:last-child, td:last-child { border-right: none !important; }
@@ -295,12 +297,13 @@
       td::before { display: none !important; }
 
       /* Column Print Width Alignments */
-      .col-term { width: 12%; text-align: left !important; }
-      .col-type { width: 12%; text-align: center !important; }
-      .col-subject { width: 38%; text-align: left !important; }
-      .col-units { width: 10%; text-align: center !important; }
-      .col-term-grade { width: 9%; text-align: center !important; }
-      .col-final { width: 10%; text-align: right !important; }
+      .col-term { width: 10%; text-align: left !important; }
+      .col-type { width: 10%; text-align: center !important; }
+      .col-subject { width: 32%; text-align: left !important; }
+      .col-units { width: 8%; text-align: center !important; }
+      .col-term-grade { width: 8%; text-align: center !important; }
+      .col-final { width: 12%; text-align: right !important; }
+      .col-remark { width: 12%; text-align: center !important; }
 
       .gwa-banner {
         background: #eff6ff !important;
@@ -328,7 +331,7 @@
   <div class="content-body">
     <!-- Login Section -->
     <div id="login-section" class="login-card">
-      <div class="login-title">Learner Grade Access Portal <br>for Senior High School</div>
+      <div class="login-title">Learner Grade Access Portal</div>
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" placeholder="Enter assigned username" autocomplete="username">
@@ -458,21 +461,30 @@
             <th class="col-term-grade">Term 2</th>
             <th class="col-term-grade">Term 3</th>
             <th class="col-final">Final Rating</th>
+            <th class="col-remark">Remarks</th>
           </tr>
         </thead>
         <tbody>`;
 
       data.grades.forEach(item => {
-        const badgeClass = item.subjectType === 'Elective' ? 'badge-elective' : '';
+        const typeBadge = item.subjectType === 'Elective' ? 'badge-elective' : '';
+        let remarkBadge = '-';
+        if (item.remark === 'Passed') {
+          remarkBadge = `<span class="badge badge-passed">Passed</span>`;
+        } else if (item.remark === 'Failed') {
+          remarkBadge = `<span class="badge badge-failed">Failed</span>`;
+        }
+
         html += `
           <tr>
-            <td class="col-type" data-label="Type"><span class="badge ${badgeClass}">${item.subjectType}</span></td>
+            <td class="col-type" data-label="Type"><span class="badge ${typeBadge}">${item.subjectType}</span></td>
             <td class="col-subject" data-label="Subject Name"><strong>${item.subjectName}</strong></td>
             <td class="col-units" data-label="Units">${item.units}</td>
             <td class="col-term-grade" data-label="Term 1">${item.term1 ?? '-'}</td>
             <td class="col-term-grade" data-label="Term 2">${item.term2 ?? '-'}</td>
             <td class="col-term-grade" data-label="Term 3">${item.term3 ?? '-'}</td>
             <td class="col-final" data-label="Final Rating"><strong>${item.finalRating ?? '-'}</strong></td>
+            <td class="col-remark" data-label="Remarks">${remarkBadge}</td>
           </tr>`;
       });
 
@@ -496,11 +508,19 @@
             <th class="col-subject">Subject Name</th>
             <th class="col-units">Units</th>
             <th class="col-final">Final Grade</th>
+            <th class="col-remark">Remarks</th>
           </tr>
         </thead>
         <tbody>`;
 
       data.grades.forEach(item => {
+        let remarkBadge = '-';
+        if (item.remark === 'Passed') {
+          remarkBadge = `<span class="badge badge-passed">Passed</span>`;
+        } else if (item.remark === 'Failed') {
+          remarkBadge = `<span class="badge badge-failed">Failed</span>`;
+        }
+
         html += `
           <tr>
             <td class="col-term" data-label="Term"><strong>${item.term}</strong></td>
@@ -508,6 +528,7 @@
             <td class="col-subject" data-label="Subject Name">${item.subjectName}</td>
             <td class="col-units" data-label="Units">${item.units}</td>
             <td class="col-final" data-label="Final Grade"><strong>${item.finalRating ?? '-'}</strong></td>
+            <td class="col-remark" data-label="Remarks">${remarkBadge}</td>
           </tr>`;
       });
 
@@ -526,7 +547,6 @@
     container.innerHTML = html;
   }
 
-  // Calculate Grade 12 GWA dynamically on button click
   function calculateGrade12GWA() {
     if (!currentStudentData || !currentStudentData.grades) return;
 
@@ -550,7 +570,6 @@
         <span class="gwa-value">${gwa}%</span>`;
       banner.classList.remove("hidden");
       
-      // Update calculate button text to allow re-calculation if needed
       if (calcContainer) {
         calcContainer.innerHTML = `
           <button class="btn btn-calc" onclick="calculateGrade12GWA()">
